@@ -1,0 +1,34 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "io.gitlab.arturbosch.detekt:detekt-api:$detekt_version"
+    testImplementation("io.gitlab.arturbosch.detekt:detekt-test:$detekt_version")
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+
+task deleteJar(type: Delete) {
+    delete 'rules/rules.jar'
+}
+
+task createJar(type: Copy) {
+    from ('build/libs/')
+    into ('rules/')
+    include ('generator.jar')
+    rename ('generator.jar', 'rules.jar')
+}
+
+createJar.dependsOn(deleteJar)
+
+task createRules() {
+    println "Starting generate rules jar."
+}
+
+createRules.dependsOn assemble
+createRules.dependsOn createJar
+
