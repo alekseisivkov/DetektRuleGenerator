@@ -3,6 +3,7 @@ Here's a simple application, which helps to generate necessary jar file with cus
 
 # How-to:
 1. Pull the project
+1. Create your rules and add it to `CustomRuleProvider.kt`
 1. Locate task `:generator:createRules`
 1. Run it
 1. `rules.jar` file will be at `DetektRuleGenerator\generator\rules\`
