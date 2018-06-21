@@ -10,16 +10,17 @@ import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.psi.KtBlockExpression
 import org.jetbrains.kotlin.psi.KtIfExpression
 
-class ComplicatedIfElseStatement(config: Config) : Rule(config) {
-    private val sizeLimit: Int = valueOrDefault("sizeLimit", 100)
+class ComplicatedIfElseStatement(config: Config = Config.empty) : Rule(config) {
 
     override val issue = Issue(javaClass.simpleName, Severity.Style,
             "If else block is too complicated. Braces should be added for better readability",
             Debt.FIVE_MINS)
 
+    private val sizeLimit: Int = valueOrDefault(IF_ELSE_SIZE_LIMIT, DEFAULT_SIZE_LIMIT)
+
     override fun visitIfExpression(expression: KtIfExpression) {
         val complicated = isComplicated(expression)
-        if (isNotBlockExpression(expression) || isNotBlockOrIfExpression(expression) && complicated) {
+        if ((isNotBlockExpression(expression) || isNotBlockOrIfExpression(expression)) && complicated) {
             report(CodeSmell(issue, Entity.from(expression),
                     message = "If-Else statement is too long. Braces should add more readability"))
         }
@@ -34,4 +35,9 @@ class ComplicatedIfElseStatement(config: Config) : Rule(config) {
             expression.`else` != null &&
                     expression.`else` !is KtIfExpression &&
                     expression.`else` !is KtBlockExpression
+
+    companion object {
+        const val IF_ELSE_SIZE_LIMIT = "sizeLimit"
+        const val DEFAULT_SIZE_LIMIT = 100
+    }
 }
