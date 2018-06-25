@@ -18,10 +18,10 @@ task deleteJar(type: Delete) {
 }
 
 task createJar(type: Copy) {
-    from ('build/libs/')
-    into ('rules/')
-    include ('generator.jar')
-    rename ('generator.jar', 'rules.jar')
+    from('build/libs/')
+    into('rules/')
+    include('generator.jar')
+    rename('generator.jar', 'rules.jar')
 }
 
 createJar.dependsOn(deleteJar)
